@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
 
     'apps.blog.apps.BlogConfig',
+    'apps.accounts.apps.AccountsConfig',
 
     # сторонние приложения
     'mptt',
