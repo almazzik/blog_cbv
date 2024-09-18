@@ -50,6 +50,18 @@ class Category(MPTTModel):
         return reverse('post_by_category', kwargs={'slug': self.slug})
 
 
+class PostManager(models.Manager):
+    """
+    Кастомный менеджер для модели постов
+    """
+
+    def get_queryset(self):
+        """
+        Список постов (SQL запрос с фильтрацией по статусу опубликованно)
+        """
+        return super().get_queryset().select_related('author', 'category').filter(status='published')
+
+
 
 class Post(models.Model):
     """
@@ -80,6 +92,9 @@ class Post(models.Model):
                                 related_name='updater_posts', blank=True)
     fixed = models.BooleanField(verbose_name='Прикреплено', default=False)
     category = TreeForeignKey('Category', on_delete=models.PROTECT, related_name='posts', verbose_name='Категория')
+
+    objects = models.Manager()
+    custom = PostManager()
 
     class Meta:
         db_table = 'blog_post'
